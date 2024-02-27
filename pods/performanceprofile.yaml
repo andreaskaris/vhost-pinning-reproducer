@@ -1,0 +1,26 @@
+apiVersion: performance.openshift.io/v2
+kind: PerformanceProfile
+metadata:
+  name: performance
+spec:
+  globallyDisableIrqLoadBalancing: true
+  cpu:
+    isolated: 20-111
+    reserved: 0-19
+  hugepages:
+    defaultHugepagesSize: 1G 
+    pages:
+      - count: 64
+        size: 1G
+  net:
+    userLevelNetworking: true
+  machineConfigPoolSelector:
+    machineconfiguration.openshift.io/role: master
+  numa:
+    topologyPolicy: "single-numa-node"
+  nodeSelector:
+    node-role.kubernetes.io/master: ""
+  realTimeKernel:
+    enabled: true
+  workloadHints:
+    realTime: true

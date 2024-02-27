@@ -1,0 +1,30 @@
+apiVersion: sriovnetwork.openshift.io/v1
+kind: SriovNetworkNodePolicy
+metadata:
+  name: netdevice
+  namespace: openshift-sriov-network-operator
+spec:
+  resourceName: netdevice
+  nodeSelector:
+    feature.node.kubernetes.io/network-sriov.capable: "true"
+  numVfs: 12
+  nicSelector:
+    pfNames: ["eno12399#0-3"]
+  linkType: eth
+  deviceType: netdevice
+---
+apiVersion: sriovnetwork.openshift.io/v1
+kind: SriovNetworkNodePolicy
+metadata:
+  name: vhostnet
+  namespace: openshift-sriov-network-operator
+spec:
+  resourceName: vhostnet
+  nodeSelector:
+    feature.node.kubernetes.io/network-sriov.capable: "true"
+  numVfs: 12
+  nicSelector:
+    pfNames: ["eno12399#4-11"]
+  linkType: eth
+  deviceType: vfio-pci
+  needVhostNet: true
