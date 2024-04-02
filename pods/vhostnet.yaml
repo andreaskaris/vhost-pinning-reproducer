@@ -38,7 +38,7 @@ spec:
         - "-x"
         - "/entrypoint/vhostnet.sh"
         image: quay.io/akaris/testpmd:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: vhostnet
         volumeMounts:
         - name: entrypoint
