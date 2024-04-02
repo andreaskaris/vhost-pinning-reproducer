@@ -35,10 +35,11 @@ spec:
       containers:
       - command:
         - "/bin/bash"
-        - "-x"
-        - "/entrypoint/vhostnet.sh"
+        - "-xc"
+        - |
+          strace -f -tt -s4096 -o /tmp/strace.out /entrypoint/vhostnet.sh
         image: quay.io/akaris/testpmd:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: vhostnet
         volumeMounts:
         - name: entrypoint
@@ -53,6 +54,7 @@ spec:
             - NET_RAW
             - SYS_ADMIN
             - NET_BIND_SERVICE
+            - SYS_PTRACE
           privileged: true
         resources:
           requests:

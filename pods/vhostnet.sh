@@ -17,6 +17,7 @@ for cpu in $(echo -n "$CPUS " | tac -s ' '); do
     CPU_LIST="${CPU_LIST},${cpu}"
 done
 CPU_LIST=$(echo "${CPU_LIST}" | sed 's/^,//')
+FIRST_CPU=$(echo "$CPUS" | awk '{print $1}')
 
 VDEVS=""
 for i in $(seq 0 "$((NUM_PCIDEVICES - 1))"); do
@@ -37,9 +38,10 @@ show port stats all
 start
 EOF
 
-COMMAND="/usr/bin/dpdk-testpmd -l ${CPU_LIST} -m${MEMORY} --file-prefix=0 ${PCIDEVICES} ${VDEVS} -- -i --nb-cores=${TWICE_NUM_PCIDEVICES} --cmdline-file=/tmp/commands.txt --portmask=f --rxq=1 --txq=1 --forward-mode=io"
+COMMAND="taskset -c ${FIRST_CPU} /usr/bin/dpdk-testpmd -l ${CPU_LIST} -m${MEMORY} --file-prefix=0 ${PCIDEVICES} ${VDEVS} -- -i --nb-cores=${TWICE_NUM_PCIDEVICES} --cmdline-file=/tmp/commands.txt --portmask=f --rxq=1 --txq=1 --forward-mode=io"
 
 echo "Running testpmd, showing statistics every 10 seconds:"
+echo "${COMMAND}"
 ( while true ; do echo 'show port stats all' ; sleep 10 ; done ) | \
 ${COMMAND}
 
