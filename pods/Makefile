@@ -6,7 +6,7 @@ deploy:
 	bash privileged.sh vhostnet
 	oc apply -f sriovnetwork.yaml
 	oc create configmap --from-file=vhostnet.sh=vhostnet.sh entrypoint
-	cat vhostnet.yaml | sed 's/TAG/$(TAG)/' | oc apply -f -
+	cat vhostnet.yaml | oc apply -f -
 
 .PHONY: undeploy
 undeploy:

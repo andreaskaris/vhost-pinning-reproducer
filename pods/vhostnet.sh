@@ -10,7 +10,7 @@ CPU_LIST=""
 i=0
 for cpu in $(echo -n "$CPUS " | tac -s ' '); do
     # We're actually getting one more CPU than TWICE_NUM_PCIDEVICES on purpose.
-    if [ ${i} -gt ${TWICE_NUM_PCIDEVICES} ]; then
+    if [ ${i} -ge $((TWICE_NUM_PCIDEVICES+1)) ]; then
         break
     fi
     i=$((i+1))
@@ -38,7 +38,8 @@ show port stats all
 start
 EOF
 
-COMMAND="taskset -c ${FIRST_CPU} /usr/bin/dpdk-testpmd -l ${CPU_LIST} -m${MEMORY} --file-prefix=0 ${PCIDEVICES} ${VDEVS} -- -i --nb-cores=${TWICE_NUM_PCIDEVICES} --cmdline-file=/tmp/commands.txt --portmask=f --rxq=1 --txq=1 --forward-mode=io"
+# COMMAND="taskset -c ${FIRST_CPU} /usr/bin/dpdk-testpmd -l ${CPU_LIST} -m${MEMORY} --file-prefix=0 ${PCIDEVICES} ${VDEVS} -- -i --nb-cores=${TWICE_NUM_PCIDEVICES} --cmdline-file=/tmp/commands.txt --portmask=f --rxq=1 --txq=1 --forward-mode=io"
+COMMAND="/usr/bin/dpdk-testpmd -l ${CPU_LIST} -m${MEMORY} --file-prefix=0 ${PCIDEVICES} ${VDEVS} -- -i --nb-cores=${TWICE_NUM_PCIDEVICES} --cmdline-file=/tmp/commands.txt --portmask=f --rxq=1 --txq=1 --forward-mode=io"
 
 echo "Running testpmd, showing statistics every 10 seconds:"
 echo "${COMMAND}"
